@@ -2,7 +2,8 @@ import { AppProps, AppContext } from 'next/app';
 import React, { Suspense, useEffect } from 'react';
 import { Provider } from 'jotai';
 import dynamic from 'next/dynamic';
-import { Hydrate, QueryClient, QueryClientProvider, useQuery } from 'react-query';
+import { QueryClient } from "react-query";
+import { Hydrate, QueryClientProvider } from 'react-query/reactjs';
 import Router, { useRouter } from 'next/dist/client/router';
 import { EmotionCache } from '@emotion/react';
 import NProgress from 'nprogress';
@@ -11,30 +12,39 @@ import createEmotionCache from 'src/components/createEmotionCache';
 import { CssBaseline } from '@mui/material';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import Head from 'next/head';
+import ReactDOM from 'react-dom/client';
 import { ThemeProvider as NextThemeProvider } from 'next-themes';
-import * as ReactDOM from 'react-dom';
 
 const clientSideEmotionCache: EmotionCache = createEmotionCache();
 
-const ThemeWrapper = dynamic(() => import('src/themes/ThemeWrapper'));
+let root:ReactDOM.Root|null;
 
+const ThemeWrapper = dynamic(() => import('src/themes/ThemeWrapper'), { ssr: false });
 Router.events.on('routeChangeStart', url => {
   console.log(`Loading: ${url}`);
   NProgress.start();
-  document.body.classList.add('body-page-transition');
-  ReactDOM.render(<SuspenseLoader />, document.getElementById('page-transition'));
+  if (typeof window !== 'undefined') {
+    const transition = document.getElementById('page-transition') as HTMLElement;
+    document.body.classList.add('body-page-transition');
+    root = ReactDOM.createRoot(transition);
+    root && root.render(<SuspenseLoader />);
+  }
+
 });
 Router.events.on('routeChangeComplete', () => {
   NProgress.done();
-  const transition = document.getElementById('page-transition');
-  transition && ReactDOM.unmountComponentAtNode(transition);
-  document.body.classList.remove('body-page-transition');
+  if (typeof window !== 'undefined') {
+    root && root.unmount();
+    document.body.classList.remove('body-page-transition');
+  }
+
 });
 Router.events.on('routeChangeError', () => {
   NProgress.done();
-  const transition = document.getElementById('page-transition');
-  transition && ReactDOM.unmountComponentAtNode(transition);
-  document.body.classList.remove('body-page-transition');
+  if (typeof window !== 'undefined') {
+    root && root.unmount();
+    document.body.classList.remove('body-page-transition');
+  }
 });
 Router.events.on('routeChangeComplete', () => {
   setTimeout(() => {

@@ -13,10 +13,6 @@ const nextConfig = {
   swcMinify: true,
   pageExtensions: ['jsx', 'js', 'ts', 'tsx'],
   productionBrowserSourceMaps: true,
-  experimental: {
-    outputStandalone: true,
-    reactRoot: true,
-  },
   typescript: {
     // Motivated by https://github.com/zeit/next.js/issues/7687
     ignoreDevErrors: false,
