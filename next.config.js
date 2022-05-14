@@ -10,11 +10,10 @@ const withTM = require('next-transpile-modules')([
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
+  swcMinify: false,
   pageExtensions: ['jsx', 'js', 'ts', 'tsx'],
   productionBrowserSourceMaps: true,
   typescript: {
-    // Motivated by https://github.com/zeit/next.js/issues/7687
     ignoreDevErrors: false,
     ignoreBuildErrors: false
   },
@@ -30,14 +29,6 @@ const nextConfig = {
     defaultLoaders,
     webpack
   }) => {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'process.env': {
-          ENABLE_AD: JSON.stringify(process.env.ENABLE_AD),
-          GITHUB_AUTH: JSON.stringify(process.env.GITHUB_AUTH),
-        }
-      })
-    );
     config.resolve.alias = {
       ...config.resolve.alias,
     };

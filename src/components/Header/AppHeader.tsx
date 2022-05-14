@@ -25,6 +25,7 @@ import {
   useMediaQuery
 } from '@mui/material';
 import Link, { LinkProps } from '../Link';
+import { signOut } from "next-auth/react";
 import MenuIcon from '@mui/icons-material/Menu';
 import dynamic from 'next/dynamic';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -165,7 +166,7 @@ const AppHeader = React.forwardRef<PcHeaderImperativeHandleRef, PcHeaderProps>(
               open={Boolean(anchorEl)}
               onClose={() => setAnchorEl(null)}
             >
-              <MenuItem>退出</MenuItem>
+              <MenuItem onClick={() => signOut()}>退出</MenuItem>
             </StyleMenu>
           </Stack>
         </Toolbar>
