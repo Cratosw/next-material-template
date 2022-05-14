@@ -5,11 +5,10 @@ import NextLink, { LinkProps as NextLinkProps } from 'next/link';
 import { Link as MuiLink,  LinkProps as MuiLinkProps } from '@mui/material';
 
 interface NextLinkComposedProps
-  extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>,
-    Omit<NextLinkProps, 'href' | 'as'> {
+  extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'as'|'href'|'onMouseEnter'|"onClick">,NextLinkProps {
   to: NextLinkProps['href'];
   linkAs?: NextLinkProps['as'];
-  href?: NextLinkProps['href'];
+  href: NextLinkProps['href'];
 }
 
 const NextLinkComposed = React.forwardRef<HTMLAnchorElement, NextLinkComposedProps>(
@@ -81,7 +80,7 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(props,
   }
 
   if (noLinkStyle) {
-    return <NextLinkComposed className={className} ref={ref as any} to={href} {...other} />;
+    return <NextLinkComposed className={className} ref={ref as any} to={href} {...other} href={href}/>;
   }
 
   //let linkAs = linkAsProp || (href as string);
