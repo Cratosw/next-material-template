@@ -3,9 +3,12 @@ import React, { Suspense, useEffect } from 'react';
 import { Provider } from 'jotai';
 import dynamic from 'next/dynamic';
 import { QueryClient } from "react-query";
+import { getSession, SessionProvider, useSession } from 'next-auth/react';
 import { Hydrate, QueryClientProvider } from 'react-query/reactjs';
 import Router, { useRouter } from 'next/dist/client/router';
 import { EmotionCache } from '@emotion/react';
+import { SnackbarUtilsConfigurator } from 'src/components/NotistackUtils';
+import { SnackbarProvider } from 'notistack';
 import NProgress from 'nprogress';
 import 'src/styles/reset.css';
 import createEmotionCache from 'src/components/createEmotionCache';
@@ -17,7 +20,7 @@ import { ThemeProvider as NextThemeProvider } from 'next-themes';
 
 const clientSideEmotionCache: EmotionCache = createEmotionCache();
 
-let root:ReactDOM.Root|null;
+let root: ReactDOM.Root | null;
 
 const ThemeWrapper = dynamic(() => import('src/themes/ThemeWrapper'), { ssr: false });
 Router.events.on('routeChangeStart', url => {
@@ -119,7 +122,8 @@ async function registerServiceWorker() {
  */
 const AppWrapper: React.FC<AppWrapperProps> = props => {
   const { children, emotionCache, pageProps } = props;
-
+  const { status ,data: session } = useSession();
+  console.log(session,status ,'session');
   React.useEffect(() => {
     registerServiceWorker();
 
@@ -129,12 +133,17 @@ const AppWrapper: React.FC<AppWrapperProps> = props => {
       jssStyles.parentElement?.removeChild(jssStyles);
     }
   }, []);
-
+  if (status === "loading") {
+    return <SuspenseLoader></SuspenseLoader>
+  }
   return (
-    <ThemeWrapper emotionCache={emotionCache}>
-      <CssBaseline />
-      <Suspense fallback={<SuspenseLoader></SuspenseLoader>}>{children}</Suspense>
-    </ThemeWrapper>
+    <SnackbarProvider maxSnack={3} variant="success">
+      <ThemeWrapper emotionCache={emotionCache}>
+        <SnackbarUtilsConfigurator />
+        <CssBaseline />
+        <Suspense fallback={<SuspenseLoader></SuspenseLoader>}>{children}</Suspense>
+      </ThemeWrapper>
+    </SnackbarProvider>
   );
 };
 /**
@@ -146,6 +155,7 @@ const MyApp = ({
   emotionCache = clientSideEmotionCache,
   pageProps: { session, themes, ...pageProps }
 }: AppProps): JSX.Element => {
+  console.log(session);
   const [queryClient] = React.useState(() => new QueryClient());
   const { initialState } = pageProps;
   return (
@@ -155,13 +165,15 @@ const MyApp = ({
       </Head>
       <Provider>
         <NextThemeProvider defaultTheme='system'>
-          <QueryClientProvider client={queryClient}>
-            <Hydrate state={pageProps.dehydratedState}>
-              <AppWrapper emotionCache={emotionCache} pageProps={pageProps}>
-                <Component {...pageProps} />
-              </AppWrapper>
-            </Hydrate>
-          </QueryClientProvider>
+          <SessionProvider session={session} refetchInterval={0}>
+            <QueryClientProvider client={queryClient}>
+              <Hydrate state={pageProps.dehydratedState}>
+                <AppWrapper emotionCache={emotionCache} pageProps={pageProps}>
+                  <Component {...pageProps} />
+                </AppWrapper>
+              </Hydrate>
+            </QueryClientProvider>
+          </SessionProvider>
         </NextThemeProvider>
       </Provider>
     </>

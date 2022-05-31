@@ -84,8 +84,11 @@ export default function HeaderNavBar() {
           <Link role="menuitem" href={"/"}>
             首页
           </Link>
-          <Link role="menuitem" href={"/twopage"}>
-            TwoPage
+          <Link role="menuitem" href={"/NoAuth"}>
+            NoAuth
+          </Link>
+          <Link role="menuitem" href={"/Auth"}>
+            Auth
           </Link>
         </li>
       </ul>
