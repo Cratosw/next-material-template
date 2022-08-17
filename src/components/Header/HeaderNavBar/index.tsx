@@ -87,9 +87,6 @@ export default function HeaderNavBar() {
           <Link role="menuitem" href={"/NoAuth"}>
             NoAuth
           </Link>
-          <Link role="menuitem" href={"/Auth"}>
-            Auth
-          </Link>
         </li>
       </ul>
     </Navigation>

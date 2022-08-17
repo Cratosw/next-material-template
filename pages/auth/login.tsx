@@ -1,12 +1,4 @@
 import { GetServerSidePropsContext } from 'next';
-import {
-  ClientSafeProvider,
-  getCsrfToken,
-  getProviders,
-  LiteralUnion,
-  signIn,
-  SignInResponse
-} from 'next-auth/react';
 import React, { useContext, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
@@ -23,12 +15,18 @@ import {
   Input,
   InputLabel,
   Paper,
-  Typography
+  Typography,
+  Theme
 } from '@mui/material';
+import decodeJwt from 'jwt-decode';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { useSnackbar } from 'notistack';
+import { useMutation } from '@tanstack/react-query';
+import { setCookieUserToken } from 'src/components/UserToken';
+import axios from 'axios';
+import { setAxiosToken } from 'src/requests/axiosFectch';
 
 interface FormValues extends Record<string, any> {
   userName: string;
@@ -52,37 +50,43 @@ export default function SignIn({ csrfToken }: SignInServerPageParams): JSX.Eleme
       password:'123456'
     }
   });
-  const [generalLoginError, setGeneralLoginError] = useState('');
   const snackbar=useSnackbar();
-  const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const router=useRouter();
-  const onSubmitLogin = async (data: FormValues) => {
-    try {
-      signIn<"credentials">('credentials', {
-        //callbackUrl: `${process.env.NEXTAUTH_URL}`,
-        username: data.userName,
-        password: data.password,
-        redirect: false
-      }).then((data:SignInResponse | undefined)=>{
-        console.log("data",data);
-        console.log("登录返回",data);
-        if(typeof(data)==="undefined"){
-          snackbar.enqueueSnackbar("内部错误",{
-            variant:"error"
-          });
+
+  const loginMutation = useMutation(
+    ['loginMutation'],
+    ({ userName, password }: { userName: string; password: string }) =>
+      axios.post("/api/users/authenticate",{userName, password}),
+    {
+      onSuccess: (
+        data: any,
+        variables: FormValues,
+        context: unknown
+      ) => {
+        console.log(data);
+        if (data.status==200 && data.data) {
+          const token = data.data.token;
+          if (token) {
+            const content = decodeJwt<_User.JwtToken>(token);
+            const unixTimeStamp = content.exp;
+            setCookieUserToken(token, content.exp);
+            setAxiosToken(token);
+            const redirecturl = router.query?.redirecturl;
+            if (redirecturl) {
+              router.replace(redirecturl as string);
+            } else {
+              router.replace('/');
+            }
+          }
         }
-        if(!!data && data?.status===200){
-          router.push(`/`);
-        }
-        if(!!data && data?.status===401){
-          snackbar.enqueueSnackbar("用户名或者密码失败",{
-            variant:"error"
-          });
-        }
-      });
-    } catch (error) {
-      console.error('An unexpected error happened occurred:', error);
+      },
+      onError: (error: any, variables: FormValues, context: unknown) => {
+        console.log(error);
+      }
     }
+  );
+  const onSubmitLogin = async (data: FormValues) => {
+    loginMutation.mutate(data);
   };
 
   return (
@@ -95,7 +99,7 @@ export default function SignIn({ csrfToken }: SignInServerPageParams): JSX.Eleme
         sx={{
           backgroundImage: 'url(https://source.unsplash.com/random)',
           backgroundRepeat: 'no-repeat',
-          backgroundColor: theme =>
+          backgroundColor: (theme:Theme) =>
             theme.palette.mode === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
           backgroundSize: 'cover',
           backgroundPosition: 'center'
@@ -182,7 +186,6 @@ export default function SignIn({ csrfToken }: SignInServerPageParams): JSX.Eleme
                 control={<Checkbox value="remember" color="primary" />}
                 label="记住密码"
               />
-              {generalLoginError && <div>{generalLoginError}</div>}
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                 登录
               </Button>
@@ -198,14 +201,4 @@ export default function SignIn({ csrfToken }: SignInServerPageParams): JSX.Eleme
       </Grid>
     </Grid>
   );
-}
-export async function getServerSideProps(context: GetServerSidePropsContext): Promise<{
-  props: {
-    csrfToken: string | undefined;
-  };
-}> {
-  const csrfToken: string | undefined = await getCsrfToken(context);
-  return {
-    props: { csrfToken }
-  };
 }

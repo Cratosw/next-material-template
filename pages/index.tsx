@@ -1,13 +1,6 @@
 import React, { Suspense, useCallback, useState } from 'react';
 import {
-  alpha,
-  Box,
-  Button,
-  Divider,
-  Grid,
-  Stack,
   styled,
-  Theme,
   Typography,
   TypographyProps,
   Container,
@@ -15,17 +8,11 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import {
-  GetServerSidePropsContext,
-  GetServerSidePropsResult,
   NextComponentType,
   NextPage,
   NextPageContext
 } from 'next';
-import Link from 'src/components/Link';
 import AppLayout from 'src/Layouts/AppLayout';
-import AutoAwesomeRounded from '@mui/icons-material/AutoAwesomeRounded';
-import dynamic from 'next/dynamic';
-import SuspenseLoader from 'src/components/SuspenseLoader';
 import Head from 'src/components/Head';
 
 const StyledRoot = styled(Container)<ContainerProps>(({ theme }) => ({

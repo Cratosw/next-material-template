@@ -3,38 +3,25 @@ import {
   styled,
   Theme,
   useTheme,
-  AppBar,
-  AppBarProps,
   Toolbar,
   IconButton,
   IconButtonProps,
   Tooltip,
   Avatar,
-  Box,
-  BoxProps,
-  Button,
   Menu,
   MenuItem,
-  NoSsr,
-  Select,
   Stack,
-  StackProps,
-  Typography,
   MenuProps,
   alpha,
   useMediaQuery
 } from '@mui/material';
-import Link, { LinkProps } from '../Link';
-import { signOut } from "next-auth/react";
 import MenuIcon from '@mui/icons-material/Menu';
 import dynamic from 'next/dynamic';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { useTheme as useNextTheme } from 'next-themes';
-import { useAtom } from 'jotai';
 import { motion } from 'framer-motion';
 import { MotionDivBox } from '../MotionBox';
-import AppSearch from './AppSearch';
 import { getCookie } from 'src/utils/helpers';
 
 const HeaderNavBar = dynamic(() => import('./HeaderNavBar'), { suspense: true });
@@ -129,7 +116,6 @@ const AppHeader = React.forwardRef<PcHeaderImperativeHandleRef, PcHeaderProps>(
           </MotionDivBox>
           <GrowingDiv />
           <Stack direction="row" alignItems={'center'} gap={2}>
-            <AppSearch></AppSearch>
             <Tooltip title={'主题'} enterDelay={300}>
               <IconButton
                 aria-label={'主题'}
@@ -166,7 +152,7 @@ const AppHeader = React.forwardRef<PcHeaderImperativeHandleRef, PcHeaderProps>(
               open={Boolean(anchorEl)}
               onClose={() => setAnchorEl(null)}
             >
-              <MenuItem onClick={() => signOut()}>退出</MenuItem>
+              <MenuItem>退出</MenuItem>
             </StyleMenu>
           </Stack>
         </Toolbar>

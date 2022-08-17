@@ -1,3 +1,4 @@
+const { i18n } = require('./next-i18next.config');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
@@ -16,6 +17,16 @@ const nextConfig = {
   typescript: {
     ignoreDevErrors: false,
     ignoreBuildErrors: false
+  },
+  experimental:{
+    forceSwcTransforms: true,
+    images: {
+      allowFutureImage: true,
+    },
+  },
+  eslint: {
+    // We're running this as part of the monorepo eslint
+    ignoreDuringBuilds: true,
   },
   //该函数执行两次，一次用于服务器，一次用于客户端。这允许您使用 属性区分客户端和服务器配置。webpackisServer
   //dev： - 指示是否将在开发中完成编译Boolean
@@ -73,6 +84,7 @@ const nextConfig = {
       },
     ];
   },
+  i18n,
 }
 
 module.exports = withBundleAnalyzer(withTM(nextConfig));
