@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import decodeJwt from 'jwt-decode';
-import { USER_CONSTANT } from 'src/config/constants';
 import { differenceInMinutes, fromUnixTime } from 'date-fns';
+import decodeJwt from 'jwt-decode';
+import { NextRequest, NextResponse } from 'next/server';
+import { USER_CONSTANT } from 'src/config/constants';
 
-const BASIC_AUTH_WHITELIST = new Set(["/",'/auth/login']);
+const BASIC_AUTH_WHITELIST = new Set(['/', '/auth/login']);
 
 export function middleware(request: NextRequest) {
   const response = NextResponse.next();
@@ -25,7 +25,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(`/auth/login?redirecturl=${request.url}`, request.url));
   }
   const content = decodeJwt<_User.JwtToken>(token);
-  const expired =differenceInMinutes(fromUnixTime(content.exp),new Date())<=5;
+  const expired = differenceInMinutes(fromUnixTime(content.exp), new Date()) <= 5;
   if (expired) {
     response.cookies.delete(USER_CONSTANT.USER_TOKEN_NAME);
     return NextResponse.redirect(new URL(`/auth/login?redirecturl=${request.url}`, request.url));

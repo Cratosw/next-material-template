@@ -1,5 +1,6 @@
 import React from 'react';
 import NextHead from 'next/head';
+
 interface HeadProps {
   description?: string;
   title?: string;
@@ -12,7 +13,10 @@ export default function Head(props: HeadProps): JSX.Element {
   return (
     <NextHead>
       <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
+      />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-status-bar-style" content="black" />
       <meta httpEquiv="Content-Type" content="text/html;charset=utf-8" />

@@ -1,4 +1,7 @@
 import React, { Suspense, useRef, useState } from 'react';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import MenuIcon from '@mui/icons-material/Menu';
 import {
   styled,
   Theme,
@@ -15,14 +18,11 @@ import {
   alpha,
   useMediaQuery
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import dynamic from 'next/dynamic';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import { useTheme as useNextTheme } from 'next-themes';
 import { motion } from 'framer-motion';
-import { MotionDivBox } from '../MotionBox';
+import { useTheme as useNextTheme } from 'next-themes';
+import dynamic from 'next/dynamic';
 import { getCookie } from 'src/utils/helpers';
+import { MotionDivBox } from '../MotionBox';
 
 const HeaderNavBar = dynamic(() => import('./HeaderNavBar'), { suspense: true });
 
@@ -73,28 +73,30 @@ const AppHeader = React.forwardRef<PcHeaderImperativeHandleRef, PcHeaderProps>(
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
     const [mode, setMode] = React.useState<string | null>(null);
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  
+
     const handleMenu: React.MouseEventHandler<HTMLDivElement> = event =>
       setAnchorEl(event.currentTarget);
 
     React.useEffect(() => {
-      const initialMode = getCookie('paletteMode') || prefersDarkMode?"dark":"light";
+      const initialMode = getCookie('paletteMode') || prefersDarkMode ? 'dark' : 'light';
       setMode(initialMode);
     }, [prefersDarkMode]);
 
     React.useImperativeHandle(
       ref,
       () => ({
-        handleDrawerOpen: handleDrawerOpen
+        handleDrawerOpen
       }),
       [handleDrawerOpen]
     );
-    const handleChangeThemeMode: React.MouseEventHandler<HTMLButtonElement> = (event:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        const paletteMode = theme.palette.mode === 'dark' ? 'light' : 'dark';
-        nextThemes.setTheme(paletteMode);
-        setMode(paletteMode);
-        document.cookie = `paletteMode=${paletteMode};path=/;max-age=31536000`;
-        //window.location.reload();
+    const handleChangeThemeMode: React.MouseEventHandler<HTMLButtonElement> = (
+      event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => {
+      const paletteMode = theme.palette.mode === 'dark' ? 'light' : 'dark';
+      nextThemes.setTheme(paletteMode);
+      setMode(paletteMode);
+      document.cookie = `paletteMode=${paletteMode};path=/;max-age=31536000`;
+      // window.location.reload();
     };
 
     const disablePermanent = disableDrawer === true;
@@ -103,22 +105,22 @@ const AppHeader = React.forwardRef<PcHeaderImperativeHandleRef, PcHeaderProps>(
         <Toolbar sx={{ display: 'flex', alignItems: 'center', minHeight: 56 }}>
           <StyledIconButton
             edge="start"
-            aria-label={'openDrawer'}
+            aria-label="openDrawer"
             onClick={handleDrawerOpen}
             disablePermanent={disablePermanent}
           >
             <MenuIcon />
           </StyledIconButton>
           <MotionDivBox sx={{ display: { xs: 'none', md: 'initial' } }}>
-            <Suspense fallback={<></>}>
+            <Suspense fallback={<> </>}>
               <HeaderNavBar />
             </Suspense>
           </MotionDivBox>
           <GrowingDiv />
-          <Stack direction="row" alignItems={'center'} gap={2}>
-            <Tooltip title={'主题'} enterDelay={300}>
+          <Stack direction="row" alignItems="center" gap={2}>
+            <Tooltip title="主题" enterDelay={300}>
               <IconButton
-                aria-label={'主题'}
+                aria-label="主题"
                 onClick={handleChangeThemeMode}
                 data-ga-event-category="header"
                 data-ga-event-action="colors"
@@ -126,11 +128,7 @@ const AppHeader = React.forwardRef<PcHeaderImperativeHandleRef, PcHeaderProps>(
                 {mode === 'dark' ? <DarkModeIcon /> : <LightModeIcon />}
               </IconButton>
             </Tooltip>
-            <Tooltip
-              title={'GitHub'}
-              enterDelay={300}
-              sx={{ display: 'flex', alignItems: 'center' }}
-            >
+            <Tooltip title="GitHub" enterDelay={300} sx={{ display: 'flex', alignItems: 'center' }}>
               <Avatar
                 onClick={handleMenu}
                 alt="Remy Sharp"

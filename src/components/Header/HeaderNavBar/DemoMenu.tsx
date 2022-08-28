@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Popper from '@mui/material/Popper';
-import Paper from '@mui/material/Paper';
 import Fade from '@mui/material/Fade';
+import Paper from '@mui/material/Paper';
+import Popper from '@mui/material/Popper';
+import { styled, alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Link from 'src/components/Link';
 import { MotionDivBox } from 'src/components/MotionBox';
@@ -141,7 +141,9 @@ const DemoMenu: React.FC<DashboardMenuProps> = ({ handleLeftRightArrow }) => {
         ref={menuRef}
         aria-haspopup
         aria-expanded={subMenuOpen ? 'true' : 'false'}
-        onKeyDown={onhandleKeyDown}
+        onKeyDown={event => {
+          onhandleKeyDown(event);
+        }}
       >
         示例
       </div>
@@ -187,10 +189,10 @@ const DemoMenu: React.FC<DashboardMenuProps> = ({ handleLeftRightArrow }) => {
                   <HeaderSubMenu
                     id={PRODUCT_IDS[0]}
                     role="menuitem"
-                    href={'/form'}
+                    href="/form"
                     icon={
                       <Img
-                        src={`/static/images/avatars/1.webp`}
+                        src="/static/images/avatars/1.webp"
                         alt=""
                         loading="lazy"
                         width={18}
@@ -199,7 +201,9 @@ const DemoMenu: React.FC<DashboardMenuProps> = ({ handleLeftRightArrow }) => {
                     }
                     name="表单"
                     description=""
-                    onKeyDown={onhandleKeyDown}
+                    onKeyDown={event => {
+                      onhandleKeyDown(event);
+                    }}
                   />
                 </li>
               </ul>

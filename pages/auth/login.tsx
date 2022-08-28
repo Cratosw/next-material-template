@@ -1,6 +1,6 @@
-import { GetServerSidePropsContext } from 'next';
 import React, { useContext, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {
   Button,
   FormControl,
@@ -18,14 +18,14 @@ import {
   Typography,
   Theme
 } from '@mui/material';
-import decodeJwt from 'jwt-decode';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { useRouter } from 'next/router';
-import { motion } from 'framer-motion';
-import { useSnackbar } from 'notistack';
 import { useMutation } from '@tanstack/react-query';
-import { setCookieUserToken } from 'src/components/UserToken';
 import axios from 'axios';
+import { motion } from 'framer-motion';
+import decodeJwt from 'jwt-decode';
+import { GetServerSidePropsContext } from 'next';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import { setCookieUserToken } from 'src/components/UserToken';
 import { setAxiosToken } from 'src/requests/axiosFectch';
 
 interface FormValues extends Record<string, any> {
@@ -45,27 +45,23 @@ export default function SignIn({ csrfToken }: SignInServerPageParams): JSX.Eleme
     control,
     formState: { errors }
   } = useForm<FormValues>({
-    defaultValues:{
-      userName:'admin',
-      password:'123456'
+    defaultValues: {
+      userName: 'admin',
+      password: '123456'
     }
   });
-  const snackbar=useSnackbar();
-  const router=useRouter();
+  const snackbar = useSnackbar();
+  const router = useRouter();
 
   const loginMutation = useMutation(
     ['loginMutation'],
     ({ userName, password }: { userName: string; password: string }) =>
-      axios.post("/api/users/authenticate",{userName, password}),
+      axios.post('/api/users/authenticate', { userName, password }),
     {
-      onSuccess: (
-        data: any,
-        variables: FormValues,
-        context: unknown
-      ) => {
+      onSuccess: (data: any, variables: FormValues, context: unknown) => {
         console.log(data);
-        if (data.status==200 && data.data) {
-          const token = data.data.token;
+        if (data.status === 200 && data.data) {
+          const { token } = data.data;
           if (token) {
             const content = decodeJwt<_User.JwtToken>(token);
             const unixTimeStamp = content.exp;
@@ -99,7 +95,7 @@ export default function SignIn({ csrfToken }: SignInServerPageParams): JSX.Eleme
         sx={{
           backgroundImage: 'url(https://source.unsplash.com/random)',
           backgroundRepeat: 'no-repeat',
-          backgroundColor: (theme:Theme) =>
+          backgroundColor: (theme: Theme) =>
             theme.palette.mode === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
           backgroundSize: 'cover',
           backgroundPosition: 'center'
@@ -123,7 +119,7 @@ export default function SignIn({ csrfToken }: SignInServerPageParams): JSX.Eleme
             登录
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit(onSubmitLogin)} sx={{ mt: 1 }}>
-            <FormGroup row={true}>
+            <FormGroup row>
               <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
               <FormControl fullWidth variant="standard">
                 <Controller
@@ -139,7 +135,7 @@ export default function SignIn({ csrfToken }: SignInServerPageParams): JSX.Eleme
                       hiddenLabel
                       required
                       fullWidth
-                      placeholder='用户名'
+                      placeholder="用户名"
                       name="userName"
                       autoComplete="userName"
                       autoFocus
@@ -167,7 +163,7 @@ export default function SignIn({ csrfToken }: SignInServerPageParams): JSX.Eleme
                       variant="outlined"
                       margin="normal"
                       required
-                      placeholder='密码'
+                      placeholder="密码"
                       fullWidth
                       name="password"
                       autoComplete="current-password"
@@ -193,7 +189,7 @@ export default function SignIn({ csrfToken }: SignInServerPageParams): JSX.Eleme
                 <Grid item xs>
                   忘记密码
                 </Grid>
-                <Grid item>{'注册'}</Grid>
+                <Grid item>注册</Grid>
               </Grid>
             </FormGroup>
           </Box>

@@ -13,7 +13,6 @@ import {
   Container,
   ContainerProps
 } from '@mui/material';
-import { useRouter } from 'next/router';
 import {
   GetServerSidePropsContext,
   GetServerSidePropsResult,
@@ -21,8 +20,9 @@ import {
   NextPage,
   NextPageContext
 } from 'next';
-import AppLayout from 'src/Layouts/AppLayout';
+import { useRouter } from 'next/router';
 import Head from 'src/components/Head';
+import AppLayout from 'src/Layouts/AppLayout';
 
 const StyledRoot = styled(Container)<ContainerProps>(({ theme }) => ({
   flex: '1 0 100%'

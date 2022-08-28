@@ -3,8 +3,8 @@ FROM node:16-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+COPY package.json pnpm.lock ./
+RUN pnpm install --frozen-lockfile
 
 
 # Rebuild the source code only when needed
@@ -12,7 +12,7 @@ FROM node:14-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN yarn build
+RUN pnpm build
 
 
 # Production image, copy all the files and run next
@@ -21,7 +21,7 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-RUN yarn global add pm2
+RUN pnpm global add pm2
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -46,6 +46,6 @@ ENV PORT 3000
 # Uncomment the following line in case you want to disable telemetry.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-#CMD ["yarn", "start"]
+#CMD ["pnpm", "start"]
 #CMD ["node", "server.js"]
 CMD [ "pm2-runtime", "start", "node", "--", "server.js" ]

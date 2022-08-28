@@ -1,9 +1,9 @@
 import React from 'react';
-import clsx from 'clsx';
-import { useRouter } from 'next/router';
-import NextLink, { LinkProps as NextLinkProps } from 'next/link';
 import { Link as MuiLink, LinkProps as MuiLinkProps, styled } from '@mui/material';
+import clsx from 'clsx';
 import { motion } from 'framer-motion';
+import NextLink, { LinkProps as NextLinkProps } from 'next/link';
+import { useRouter } from 'next/router';
 
 const Anchor = styled(motion.a)({});
 

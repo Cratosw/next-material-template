@@ -1,19 +1,19 @@
-import { AppProps, AppContext } from 'next/app';
 import React, { useEffect, useMemo } from 'react';
-import dynamic from 'next/dynamic';
-import { appWithTranslation } from 'next-i18next';
 import { EmotionCache } from '@emotion/react';
+import { CssBaseline } from '@mui/material';
+import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AnimatePresence, domAnimation, LazyMotion, motion } from 'framer-motion';
+import { appWithTranslation } from 'next-i18next';
 import { ThemeProvider as NextThemeProvider } from 'next-themes';
+import { AppProps, AppContext } from 'next/app';
+import dynamic from 'next/dynamic';
+import { SnackbarProvider } from 'notistack';
 import NProgress from 'nprogress';
 import 'src/styles/reset.css';
-import createEmotionCache from 'src/components/createEmotionCache';
-import { CssBaseline } from '@mui/material';
-import SuspenseLoader from 'src/components/SuspenseLoader';
-import { SnackbarProvider } from 'notistack';
-import { AnimatePresence, domAnimation, LazyMotion, motion } from 'framer-motion';
-import Head from 'src/components/Head';
 import { RecoilRoot } from 'recoil';
-import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import createEmotionCache from 'src/components/createEmotionCache';
+import Head from 'src/components/Head';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,7 +25,7 @@ export const queryClient = new QueryClient({
 const clientSideEmotionCache: EmotionCache = createEmotionCache();
 
 const fadeBack = {
-  name: "Fade Back",
+  name: 'Fade Back',
   variants: {
     initial: {
       opacity: 0,
@@ -43,14 +43,13 @@ const fadeBack = {
   transition: {
     duration: 0.7
   }
-}
+};
 
 const ThemeWrapper = dynamic(() => import('src/themes/ThemeWrapper'), { ssr: false });
 const SnackbarUtilsConfigurator = dynamic(
   async () => (await import('src/components/NotistackUtils')).SnackbarUtilsConfigurator,
   { ssr: false }
 );
-
 
 export interface AppWrapperProps {
   children: React.ReactNode;
@@ -110,13 +109,13 @@ const MyApp = ({
   const getLayout = useMemo(() => Component.getLayout || ((page: any) => page), [Component]);
   return (
     <>
-      <Head></Head>
+      <Head />
       <RecoilRoot>
         <NextThemeProvider defaultTheme="system">
           <QueryClientProvider client={queryClient}>
             <Hydrate state={pageProps.dehydratedState}>
               <LazyMotion features={domAnimation}>
-                <AnimatePresence exitBeforeEnter>
+                <AnimatePresence mode="wait">
                   <AppWrapper emotionCache={emotionCache} pageProps={pageProps}>
                     <React.Suspense fallback={<SuspenseLoader />}>
                       <motion.div

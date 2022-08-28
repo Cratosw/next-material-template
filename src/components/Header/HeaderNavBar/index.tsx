@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import DashboardMenu from './DashboardMenu';
 import Link from 'src/components/Link';
+import DashboardMenu from './DashboardMenu';
 import DemoMenu from './DemoMenu';
-
 
 const Navigation = styled('nav')(({ theme }) => ({
   '& ul': {
     padding: 0,
     margin: 0,
     listStyle: 'none',
-    display: 'flex',
+    display: 'flex'
   },
   '& li': {
     color: theme.palette.text.primary,
@@ -29,16 +28,15 @@ const Navigation = styled('nav')(({ theme }) => ({
           theme.palette.mode === 'dark' ? theme.palette.primaryDark[200] : theme.palette.grey[700],
         // Reset on touch devices, it doesn't add specificity
         '@media (hover: none)': {
-          backgroundColor: 'initial',
-        },
-      },
+          backgroundColor: 'initial'
+        }
+      }
     },
     '& > div': {
-      cursor: 'default',
-    },
-  },
+      cursor: 'default'
+    }
+  }
 }));
-
 
 function getNextIndex(eventKey: KeyboardEvent['key'], currentIndex: number, length: number) {
   if (eventKey === 'ArrowLeft') {
@@ -51,12 +49,11 @@ function getNextIndex(eventKey: KeyboardEvent['key'], currentIndex: number, leng
 }
 
 export default function HeaderNavBar() {
-
   const navRef = React.useRef<HTMLUListElement | null>(null);
-  
+
   function handleLeftRightArrow(
     event: React.KeyboardEvent,
-    target: EventTarget | HTMLElement | null = event.target,
+    target: EventTarget | HTMLElement | null = event.target
   ) {
     if (navRef.current) {
       if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
@@ -65,7 +62,7 @@ export default function HeaderNavBar() {
           const child = navRef.current.children.item(i);
           if (child && (target === child || child.contains(target as Node))) {
             const prevSibling = navRef.current.children.item(
-              getNextIndex(event.key, i, navRef.current.children.length),
+              getNextIndex(event.key, i, navRef.current.children.length)
             );
             const htmlElement = prevSibling ? (prevSibling.firstChild as HTMLElement) : null;
             if (htmlElement) {
@@ -81,10 +78,10 @@ export default function HeaderNavBar() {
     <Navigation>
       <ul ref={navRef} role="menubar" onKeyDown={handleLeftRightArrow}>
         <li role="none">
-          <Link role="menuitem" href={"/"}>
+          <Link role="menuitem" href="/">
             首页
           </Link>
-          <Link role="menuitem" href={"/NoAuth"}>
+          <Link role="menuitem" href="/NoAuth">
             NoAuth
           </Link>
         </li>

@@ -1,1 +1,1 @@
-yarn upgrade-interactive --latest
+pnpm upgrade-interactive --latest

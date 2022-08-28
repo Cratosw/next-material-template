@@ -1,9 +1,9 @@
 import React from 'react';
-import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document';
 import createEmotionServer, { EmotionCriticalToChunks } from '@emotion/server/create-instance';
-import createEmotionCache from 'src/components/createEmotionCache';
 import { GlobalStyles } from '@mui/material';
 import { AppType } from 'next/dist/shared/lib/utils';
+import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document';
+import createEmotionCache from 'src/components/createEmotionCache';
 
 export default class MyDocument extends Document {
   render() {
@@ -22,7 +22,7 @@ export default class MyDocument extends Document {
           const value = theme ? theme.split("=")[1] : "light";
           document.documentElement.dataset.theme = value;`
             }}
-          ></script>
+          />
 
           <GlobalStyles
             styles={{
@@ -45,7 +45,7 @@ export default class MyDocument extends Document {
           {(this.props as any).emotionStyleTags}
         </Head>
         <body>
-          <div id="page-transition"></div>
+          <div id="page-transition" />
           <Main />
           <NextScript />
         </body>

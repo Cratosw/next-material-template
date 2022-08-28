@@ -1,8 +1,7 @@
-import type { NextComponentType, NextPageContext } from 'next';
-import type { NextPage } from 'next';
 import type { EmotionCache } from '@emotion/react';
-import type { Router } from 'next/router';
-import type { ReactElement, ReactNode } from 'next/router';
+import type { NextComponentType, NextPageContext } from 'next';
+
+import type { Router, ReactElement, ReactNode } from 'next/router';
 
 declare module 'next/app' {
   type AppProps<P = Record<string, unknown>> = {

@@ -1,19 +1,9 @@
 import React, { Suspense, useCallback, useState } from 'react';
-import {
-  styled,
-  Typography,
-  TypographyProps,
-  Container,
-  ContainerProps
-} from '@mui/material';
+import { styled, Typography, TypographyProps, Container, ContainerProps } from '@mui/material';
+import { NextComponentType, NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
-import {
-  NextComponentType,
-  NextPage,
-  NextPageContext
-} from 'next';
-import AppLayout from 'src/Layouts/AppLayout';
 import Head from 'src/components/Head';
+import AppLayout from 'src/Layouts/AppLayout';
 
 const StyledRoot = styled(Container)<ContainerProps>(({ theme }) => ({
   flex: '1 0 100%'
@@ -59,7 +49,7 @@ const HomeIndex: NextComponentType<NextPageContext, any, any> = props => {
           <StyledHero disableGutters>
             <StyledContent maxWidth="md">
               <StyledTitle variant="h4" color="inherit" className="111211212" gutterBottom>
-                {'next.js + mui 模板'}
+                next.js + mui 模板
               </StyledTitle>
             </StyledContent>
           </StyledHero>

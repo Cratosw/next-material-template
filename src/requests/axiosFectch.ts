@@ -14,14 +14,14 @@ export const axiosInstance = axios.create({
     'Content-Type': 'application/json;charset=UTF-8'
   }
 });
-axiosInstance.defaults.headers.common['lang'] = 'zh_CN';
+axiosInstance.defaults.headers.common.lang = 'zh_CN';
 axiosInstance.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 
 axiosInstance.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     const token = getCookieUserToken();
     if (token) {
-      (config.headers as any).common['Authorization'] = `Bearer ${token}`;
+      (config.headers as any).common.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -32,17 +32,16 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (data: AxiosResponse) => {
-    if (data.status == 200) {
+    if (data.status === 200) {
       return data.data;
-    } else {
-      SnackbarUtils.error(data.statusText);
-      return null;
     }
+    SnackbarUtils.error(data.statusText);
+    return null;
   },
   (err: AxiosError) => {
     if (err.response?.status === 401) {
-      if(!isSSR){
-        window.location.href = "/login";
+      if (!isSSR) {
+        window.location.href = '/login';
       }
       return Promise.resolve(err?.response);
     }

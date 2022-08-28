@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { CacheProvider, EmotionCache } from '@emotion/react';
 import {
   PaletteMode,
   Theme,
@@ -6,9 +7,9 @@ import {
   ThemeProvider as MuiThemeProvider,
   useMediaQuery
 } from '@mui/material';
-import { CreateResponsiveFontSizesTheme, GetThemeOptions } from './ThemeSkins/MaterialDocTheme';
-import { CacheProvider, EmotionCache } from '@emotion/react';
 import { useTheme } from 'next-themes';
+import { CreateResponsiveFontSizesTheme, GetThemeOptions } from './ThemeSkins/MaterialDocTheme';
+
 interface ThemeWrapperProps {
   emotionCache: EmotionCache;
   children: React.ReactNode;
@@ -16,28 +17,25 @@ interface ThemeWrapperProps {
 const useEnhancedEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 
 export const getMetaThemeColor = (mode: PaletteMode | undefined) => {
-  if(!!mode){
-    if(mode==='dark'){
-      return "#0b3e05";
-    }else{
-      return "#ecd96f";
+  if (mode) {
+    if (mode === 'dark') {
+      return '#0b3e05';
     }
-    
-  }else{
-    return "#ecd96f";
+    return '#ecd96f';
   }
+  return '#ecd96f';
 };
 export const DispatchContext = React.createContext<any>(null);
 
 const ThemeWrapper = ({ children, emotionCache }: ThemeWrapperProps) => {
   const nextThemes = useTheme();
-  console.log(nextThemes.theme,"nextThemes");
+  console.log(nextThemes.theme, 'nextThemes');
 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const preferredMode = prefersDarkMode ? 'dark' : 'light';
 
   const theme = React.useMemo(() => {
-    if(nextThemes.theme==='system'){
+    if (nextThemes.theme === 'system') {
       return CreateResponsiveFontSizesTheme(GetThemeOptions(preferredMode as PaletteMode));
     }
     return CreateResponsiveFontSizesTheme(GetThemeOptions(nextThemes.theme as PaletteMode));
@@ -55,9 +53,7 @@ const ThemeWrapper = ({ children, emotionCache }: ThemeWrapperProps) => {
 
   return (
     <CacheProvider value={emotionCache}>
-      <MuiThemeProvider theme={theme}>
-        {children}
-      </MuiThemeProvider>
+      <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
     </CacheProvider>
   );
 };

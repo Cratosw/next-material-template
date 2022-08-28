@@ -1,13 +1,13 @@
-import _ from 'lodash-es';
+import { addDays, differenceInMinutes, fromUnixTime } from 'date-fns';
 import Cookies from 'js-cookie';
 import decodeJwt from 'jwt-decode';
-import { isSSR } from 'src/utils/util';
+import _ from 'lodash-es';
 import { USER_CONSTANT } from 'src/config/constants';
-import { addDays,differenceInMinutes,fromUnixTime } from 'date-fns';
+import { isSSR } from 'src/utils/util';
 
 /**
  *获取token
- * @param 
+ * @param
  * @returns
  */
 export const getCookieUserToken = (opts: { token?: string | null } = { token: null }): string => {
@@ -16,11 +16,11 @@ export const getCookieUserToken = (opts: { token?: string | null } = { token: nu
     return '';
   }
   const content = decodeJwt<_User.JwtToken>(userToken);
-  if(!content){
+  if (!content) {
     Cookies.remove(USER_CONSTANT.USER_TOKEN_NAME);
     return '';
   }
-  const expired =differenceInMinutes(fromUnixTime(content.exp),new Date())<=5;
+  const expired = differenceInMinutes(fromUnixTime(content.exp), new Date()) <= 5;
   if (expired) {
     Cookies.remove(USER_CONSTANT.USER_TOKEN_NAME);
     return '';
@@ -43,7 +43,6 @@ export const removeCookieUserToken = (): boolean => {
 export const getCookieUserInfoStr = (userInfoStr?: string) => {
   return userInfoStr || Cookies.get(USER_CONSTANT.USER_INFO_NAME);
 };
-
 
 export const clearCookieUser = (): boolean => {
   const removedUserToken = removeCookieUserToken();

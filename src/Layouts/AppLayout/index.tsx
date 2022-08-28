@@ -1,5 +1,4 @@
 import React, { Suspense, useEffect, useState } from 'react';
-import Router, { useRouter } from 'next/router';
 import {
   useTheme,
   Theme,
@@ -10,7 +9,6 @@ import {
   useMediaQuery,
   ContainerProps
 } from '@mui/material';
-import dynamic from 'next/dynamic';
 import {
   domAnimation,
   ForwardRefComponent,
@@ -18,6 +16,8 @@ import {
   LazyMotion,
   motion
 } from 'framer-motion';
+import dynamic from 'next/dynamic';
+import Router, { useRouter } from 'next/router';
 import AppHeader from 'src/components/Header/AppHeader';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
@@ -60,7 +60,7 @@ const StyledContainer = styled<ForwardRefComponent<HTMLDivElement, HTMLMotionPro
 function AppLayout(props: { children: React.ReactNode }): JSX.Element {
   const { children } = props;
   return (
-    <React.Fragment>
+    <>
       <AppHeader disableDrawer={false} />
       <StyledRoot
         initial={{
@@ -76,7 +76,7 @@ function AppLayout(props: { children: React.ReactNode }): JSX.Element {
         }}
       >
         <LazyMotion features={domAnimation}>
-          <Suspense fallback={<SuspenseLoader></SuspenseLoader>}>
+          <Suspense fallback={<SuspenseLoader />}>
             <StyledContainer
               animate={{
                 transition: {
@@ -89,7 +89,7 @@ function AppLayout(props: { children: React.ReactNode }): JSX.Element {
           </Suspense>
         </LazyMotion>
       </StyledRoot>
-    </React.Fragment>
+    </>
   );
 }
 export default AppLayout;
