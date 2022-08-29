@@ -8,4 +8,4 @@ nginx
 plugins
 reactDevtools
 next-i18next.config.js
-next.config.mjs
+next.config.js

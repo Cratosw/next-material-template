@@ -68,8 +68,8 @@ module.exports = async (phase, { defaultConfig }) => {
     env: {
       customKey: 'value'
     },
-    node: {
-      fs: 'empty'
+    exportPathMap: async function (defaultPathMap, { dev, dir, outDir, distDir, buildId }) {
+      return defaultPathMap;
     },
     async redirects() {
       return [
