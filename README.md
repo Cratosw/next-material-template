@@ -1,1 +1,1 @@
-pnpm upgrade-interactive --latest
+pnpm update --interactive --latest
